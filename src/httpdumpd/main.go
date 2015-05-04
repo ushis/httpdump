@@ -49,6 +49,6 @@ func main() {
 	go http.Serve(listener, mux)
 
 	sig := make(chan os.Signal)
-	signal.Notify(sig, syscall.SIGINT)
+	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
 	<-sig
 }
