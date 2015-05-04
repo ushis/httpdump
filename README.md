@@ -20,16 +20,17 @@ make
 
 ### Options
 
-- **-listen** address to listen to (default: ":8080")
-- **-root** location of static files (default: ".")
+- **-listen** address to listen to (default: 0.0.0.0:8080)
+- **-root** location of static files (default: .)
 
 ## Use
 
 Visit [http://localhost:8080](http://localhost:8080) with your Webbrowser and
-send requests to http://localhost:8080/dump/.
+send requests to **http://localhost:8080/dump/**.
 
 ```
 curl -X POST -H 'Content-Type: application/json' -d '[1,2,3]' http://localhost:8080/dump/
+
 curl -X DELETE http://localhost:8080/dump/some/arbitrary/path
 ```
 
