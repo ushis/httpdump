@@ -1,0 +1,10 @@
+# Vim
+*.swo
+*.swp
+
+# Dependencies
+/src/code.google.com
+/src/golang.org
+
+# Binaries
+/httpdumpd
