@@ -1,5 +1,5 @@
 body {
-  font: normal normal normal 14px/160% monospace;
+  font: normal normal normal 13px/160% monospace;
 }
 
 #wrapper {
@@ -12,17 +12,19 @@ body {
   margin-top: 20px;
 }
 
-.request .date {
-  padding: 4px 10px;
-  font-size: 12px;
-  text-align: right;
-}
-
 .request h2,
+.request .date,
 .request .headers,
 .request .body {
+  clear: both;
   margin: 0 0 1px 0;
   padding: 10px;
   background-color: #f0f0f0;
   white-space: pre-wrap;
+}
+
+.request .date {
+  padding: 4px 10px;
+  font-size: 11px;
+  float: left;
 }

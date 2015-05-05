@@ -80,7 +80,11 @@
     var contentType = (msg.header['Content-Type'] || []).join('');
 
     if (contentType.indexOf('application/json') > -1) {
-      body.textContent = JSON.stringify(JSON.parse(msg.body), null, 2);
+      try {
+        body.textContent = JSON.stringify(JSON.parse(msg.body), null, 2);
+      } catch (_) {
+        body.textContent = msg.body;
+      }
     } else {
       body.textContent = msg.body;
     }
