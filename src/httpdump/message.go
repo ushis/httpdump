@@ -7,6 +7,7 @@ import (
 
 type Message struct {
 	Method        string              `json:"method"`
+	Host          string              `json:"host"`
 	Url           string              `json:"url"`
 	Proto         string              `json:"proto"`
 	Header        map[string][]string `json:"header"`
@@ -25,6 +26,7 @@ func NewMessage(r *http.Request) (msg *Message) {
 		msg = new(Message)
 	}
 	msg.Method = r.Method
+	msg.Host = r.Host
 	msg.Url = r.URL.String()
 	msg.Proto = r.Proto
 	msg.Header = r.Header

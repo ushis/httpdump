@@ -62,6 +62,10 @@
     var headers = document.createElement('div');
     headers.classList.add('headers');
 
+    var host = document.createElement('div');
+    host.textContent = 'Host: ' + msg.host;
+    headers.appendChild(host);
+
     Object.keys(msg.header).forEach(function(header) {
       var div = document.createElement('div');
       div.textContent = header + ': ' + msg.header[header].join(', ');
