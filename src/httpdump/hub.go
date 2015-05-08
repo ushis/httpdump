@@ -43,8 +43,13 @@ func (h *Hub) Close() {
 	h.die <- 1
 }
 
-func (h *Hub) HTTPHandler() websocket.Handler {
+func (h *Hub) SocketHandler() websocket.Handler {
 	return websocket.Handler(h.connect)
+}
+
+func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	h.recv <- NewMessage(r)
+	w.WriteHeader(204)
 }
 
 func (h *Hub) connect(conn *websocket.Conn) {
@@ -52,10 +57,6 @@ func (h *Hub) connect(conn *websocket.Conn) {
 	h.reg <- c
 	c.Run()
 	h.rm <- c
-}
-
-func (h *Hub) Dispatch(r *http.Request) {
-	h.recv <- NewMessage(r)
 }
 
 func (h *Hub) dispatch(msg *Message) {

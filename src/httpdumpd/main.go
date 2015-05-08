@@ -40,11 +40,9 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir(root)))
-	mux.Handle("/socket", hub.HTTPHandler())
-
-	mux.HandleFunc("/dump/", func(_ http.ResponseWriter, r *http.Request) {
-		hub.Dispatch(r)
-	})
+	mux.Handle("/dump", hub)
+	mux.Handle("/dump/", hub)
+	mux.Handle("/socket", hub.SocketHandler())
 
 	go http.Serve(listener, mux)
 
