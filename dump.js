@@ -50,14 +50,13 @@
     var container = document.createElement('div');
     container.classList.add('request');
 
-    var date = document.createElement('div');
-    date.classList.add('date');
-    date.textContent = (new Date()).toLocaleTimeString();
-    container.appendChild(date);
-
     var h2 = document.createElement('h2');
     h2.textContent = [msg.proto, msg.method, msg.url].join(' ');
     container.appendChild(h2);
+
+    h2.addEventListener('click', function() {
+      container.classList.toggle('active');
+    });
 
     var headers = document.createElement('div');
     headers.classList.add('headers');

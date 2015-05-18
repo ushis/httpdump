@@ -9,13 +9,13 @@ body {
 }
 
 .request {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .request h2,
-.request .date,
 .request .headers,
 .request .body {
+  display: none;
   clear: both;
   margin: 0 0 1px 0;
   padding: 10px;
@@ -23,8 +23,12 @@ body {
   white-space: pre-wrap;
 }
 
-.request .date {
-  padding: 4px 10px;
-  font-size: 11px;
-  float: left;
+.request h2,
+.request.active .headers,
+.request.active .body {
+  display: block;
+}
+
+.request h2 {
+  cursor: pointer;
 }
