@@ -41,61 +41,88 @@
     });
   };
 
-  var Wrapper = function(selector, host) {
-    this.el = document.querySelector(selector);
-    this.host = host;
+  var Container = function(request) {
+    this.req = request;
+  }
+
+  Container.prototype.heading = function() {
+    return [this.req.proto, this.req.method, this.req.url].join(' ');
+  }
+
+  Container.prototype.headers = function() {
+    var headers = Object.keys(this.req.header).map(function(header) {
+      return [header, ': ', this.req.header[header].join(', ')].join('');
+    }, this);
+
+    return ['Host: ' + this.req.host].concat(headers);
   };
 
-  Wrapper.prototype.push = function(msg) {
-    var container = document.createElement('div');
-    container.classList.add('request');
+  Container.prototype.body = function() {
+    var contentType = (this.req.header['Content-Type'] || []).join('');
 
-    var h2 = document.createElement('h2');
-    h2.textContent = [msg.proto, msg.method, msg.url].join(' ');
-    container.appendChild(h2);
+    if (contentType.indexOf('application/json') < 0) {
+      return this.req.body;
+    }
 
-    h2.addEventListener('click', function() {
-      container.classList.toggle('active');
+    try {
+      return JSON.stringify(JSON.parse(this.req.body), null, 2);
+    } catch (_) {
+      return this.req.body;
+    }
+  };
+
+  Container.prototype.build = function() {
+    var el = document.createElement('div');
+    el.classList.add('request');
+
+    var heading =  document.createElement('h2');
+    heading.textContent = this.heading();
+    el.appendChild(heading);
+
+    heading.addEventListener('click', function() {
+      el.classList.toggle('active');
     });
 
     var headers = document.createElement('div');
     headers.classList.add('headers');
+    el.appendChild(headers);
 
-    var host = document.createElement('div');
-    host.textContent = 'Host: ' + msg.host;
-    headers.appendChild(host);
-
-    Object.keys(msg.header).forEach(function(header) {
+    this.headers().forEach(function(header) {
       var div = document.createElement('div');
-      div.textContent = header + ': ' + msg.header[header].join(', ');
+      div.textContent = header;
       headers.appendChild(div);
     });
 
-    container.appendChild(headers);
-
     var body = document.createElement('div');
     body.classList.add('body');
+    body.textContent = this.body();
+    el.appendChild(body);
 
-    var contentType = (msg.header['Content-Type'] || []).join('');
-
-    if (contentType.indexOf('application/json') > -1) {
-      try {
-        body.textContent = JSON.stringify(JSON.parse(msg.body), null, 2);
-      } catch (_) {
-        body.textContent = msg.body;
-      }
-    } else {
-      body.textContent = msg.body;
-    }
-
-    container.appendChild(body);
-
-    this.el.insertBefore(container, this.el.firstChild);
+    return el;
   };
 
-  var loc = window.location;
-  var wrapper = new Wrapper('#wrapper', loc.host);
-  var socket = new Socket('ws://' + loc.host + '/socket');
-  socket.register(wrapper.push, wrapper);
+
+  var Collector = function(selector, title) {
+    this.wrapper = document.querySelector(selector);
+    this.title = title;
+  };
+
+  Collector.prototype.updateTitle = function() {
+    document.title = ['(', this.length(), ') ', this.title].join('');
+  };
+
+  Collector.prototype.length = function() {
+    return this.wrapper.childNodes.length;
+  };
+
+  Collector.prototype.push = function(request) {
+    var container = new Container(request);
+    this.wrapper.insertBefore(container.build(), this.wrapper.firstChild);
+    this.updateTitle();
+  };
+
+  var collector = new Collector('#wrapper', 'HTTP Dump');
+  var socket = new Socket('ws://' + window.location.host + '/socket');
+  socket.register(collector.push, collector);
 
 }).call(this)
