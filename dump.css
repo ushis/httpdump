@@ -17,10 +17,11 @@ body {
 .request .body {
   display: none;
   clear: both;
-  margin: 0 0 1px 0;
+  margin: 0 0 2px 0;
   padding: 10px;
   background-color: #f0f0f0;
   white-space: pre-wrap;
+  border-radius: 3px;
 }
 
 .request h2,
@@ -31,4 +32,8 @@ body {
 
 .request h2 {
   cursor: pointer;
+}
+
+.request h2:hover {
+  background-color: #e9e9e9;
 }
